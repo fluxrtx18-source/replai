@@ -607,7 +607,12 @@ def build_config_entries():
     # -weak_framework makes the link optional so an absent framework at runtime
     # (e.g. archived Release build) never causes a crash.
     APP_DEBUG_EXTRA = {
-        "FRAMEWORK_SEARCH_PATHS":
+        # Use SYSTEM_FRAMEWORK_SEARCH_PATHS (not FRAMEWORK_SEARCH_PATHS) so the
+        # compiler treats StoreKitTest headers as system headers (-isystem).
+        # This silences deprecation warnings that originate inside the framework's
+        # own Objective-C headers (e.g. SKPaymentTransactionState in iOS 18+)
+        # without touching our own warning policy.
+        "SYSTEM_FRAMEWORK_SEARCH_PATHS":
             "(\"$(inherited)\", \"$(PLATFORM_DIR)/Developer/Library/Frameworks\")",
         "OTHER_LDFLAGS":
             "(\"$(inherited)\", \"-weak_framework\", StoreKitTest)",
