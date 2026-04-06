@@ -600,24 +600,7 @@ def build_config_entries():
     out = []
     out.append(build_config(I["proj_debug"],   "Debug",   PROJ_DEBUG_SETTINGS))
     out.append(build_config(I["proj_release"], "Release", PROJ_RELEASE_SETTINGS))
-    # Debug-only extras: expose StoreKitTest.framework so that the #if DEBUG
-    # SKTestSession import in ReplAIApp.swift compiles without errors.
-    # $(PLATFORM_DIR)/Developer/Library/Frameworks is where Xcode stores
-    # developer-SDK-only frameworks like StoreKitTest (not in the regular iOS SDK).
-    # -weak_framework makes the link optional so an absent framework at runtime
-    # (e.g. archived Release build) never causes a crash.
-    APP_DEBUG_EXTRA = {
-        # Use SYSTEM_FRAMEWORK_SEARCH_PATHS (not FRAMEWORK_SEARCH_PATHS) so the
-        # compiler treats StoreKitTest headers as system headers (-isystem).
-        # This silences deprecation warnings that originate inside the framework's
-        # own Objective-C headers (e.g. SKPaymentTransactionState in iOS 18+)
-        # without touching our own warning policy.
-        "SYSTEM_FRAMEWORK_SEARCH_PATHS":
-            "(\"$(inherited)\", \"$(PLATFORM_DIR)/Developer/Library/Frameworks\")",
-        "OTHER_LDFLAGS":
-            "(\"$(inherited)\", \"-weak_framework\", StoreKitTest)",
-    }
-    app_debug   = {**PROJ_DEBUG_SETTINGS,   **APP_COMMON, **APP_DEBUG_EXTRA}
+    app_debug   = {**PROJ_DEBUG_SETTINGS,   **APP_COMMON}
     app_release = {**PROJ_RELEASE_SETTINGS, **APP_COMMON}
     out.append(build_config(I["app_debug"],    "Debug",   app_debug))
     out.append(build_config(I["app_release"],  "Release", app_release))
