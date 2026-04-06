@@ -17,7 +17,7 @@ struct HomeView: View {
                         HomeHeaderView()
                         // Badge only shown for free users — subscribers don't need the nudge.
                         if !subscriptionManager.isSubscribed {
-                            UsageBadgeView(usageTracker: usageTracker)
+                            UsageBadgeView()
                         }
                         HowItWorksCard()
                         HomeActionSection(

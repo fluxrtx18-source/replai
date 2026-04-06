@@ -1,23 +1,19 @@
 import Foundation
 
 /// Tracks how many analyses the user has run this calendar week.
-/// Uses an App Group UserDefaults so the Share Extension shares the same count.
+/// The count is shared via App Group UserDefaults so the Action Extension sees
+/// the same value without needing to re-read from StoreKit.
 @MainActor
 @Observable
 final class UsageTracker {
 
     // MARK: - Constants
-    static let freeWeeklyLimit = 3
-    private static let suiteID       = AppDesign.appGroupID
-    private static let countKey      = "weeklyAnalysisCount"
-    private static let weekStartKey  = "weekStartDate"
+    private static let suiteID      = AppDesign.appGroupID
+    private static let countKey     = "weeklyAnalysisCount"
+    private static let weekStartKey = "weekStartDate"
 
     // MARK: - Observed state
     private(set) var analysisCount: Int = 0
-
-    // MARK: - Computed helpers
-    var hasReachedLimit: Bool       { analysisCount >= Self.freeWeeklyLimit }
-    var remaining: Int              { max(0, Self.freeWeeklyLimit - analysisCount) }
 
     // MARK: - Private
     private let defaults: UserDefaults

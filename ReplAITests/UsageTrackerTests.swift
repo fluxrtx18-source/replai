@@ -25,18 +25,6 @@ struct UsageTrackerTests {
         #expect(tracker.analysisCount == 0)
     }
 
-    @Test("Initially has not reached the limit")
-    func initiallyUnderLimit() {
-        let (tracker, _) = Self.makeTracker()
-        #expect(!tracker.hasReachedLimit)
-    }
-
-    @Test("Initially shows full remaining count")
-    func initialRemaining() {
-        let (tracker, _) = Self.makeTracker()
-        #expect(tracker.remaining == UsageTracker.freeWeeklyLimit)
-    }
-
     // MARK: - Recording analyses
 
     @Test("Recording an analysis increments the count")
@@ -44,7 +32,6 @@ struct UsageTrackerTests {
         let (tracker, _) = Self.makeTracker()
         tracker.recordAnalysis()
         #expect(tracker.analysisCount == 1)
-        #expect(tracker.remaining == UsageTracker.freeWeeklyLimit - 1)
     }
 
     @Test("Recording multiple analyses tracks correctly")
@@ -53,27 +40,6 @@ struct UsageTrackerTests {
         tracker.recordAnalysis()
         tracker.recordAnalysis()
         #expect(tracker.analysisCount == 2)
-    }
-
-    // MARK: - Limit enforcement
-
-    @Test("Reaches limit after exactly 3 analyses")
-    func reachesLimit() {
-        let (tracker, _) = Self.makeTracker()
-        for _ in 0..<UsageTracker.freeWeeklyLimit {
-            tracker.recordAnalysis()
-        }
-        #expect(tracker.hasReachedLimit)
-        #expect(tracker.remaining == 0)
-    }
-
-    @Test("Remaining never goes negative")
-    func remainingFloor() {
-        let (tracker, _) = Self.makeTracker()
-        for _ in 0..<(UsageTracker.freeWeeklyLimit + 2) {
-            tracker.recordAnalysis()
-        }
-        #expect(tracker.remaining == 0)
     }
 
     // MARK: - Persistence via refresh
@@ -87,10 +53,4 @@ struct UsageTrackerTests {
         #expect(tracker.analysisCount == 2)
     }
 
-    // MARK: - Free weekly limit constant
-
-    @Test("Free weekly limit is 3")
-    func limitConstant() {
-        #expect(UsageTracker.freeWeeklyLimit == 3)
-    }
 }

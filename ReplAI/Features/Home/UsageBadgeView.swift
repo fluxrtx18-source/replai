@@ -1,9 +1,7 @@
 import SwiftUI
 
-/// Shows the user's remaining free analyses for the week.
+/// Informs free users that Calm tone is always available and prompts an upgrade.
 struct UsageBadgeView: View {
-    let usageTracker: UsageTracker
-
     var body: some View {
         HStack(spacing: AppDesign.Spacing.sm) {
             Image(systemName: "sparkles")
@@ -25,7 +23,7 @@ struct UsageBadgeView: View {
 }
 
 #Preview {
-    UsageBadgeView(usageTracker: UsageTracker())
+    UsageBadgeView()
         .padding()
         .background(AppDesign.Color.background)
 }
