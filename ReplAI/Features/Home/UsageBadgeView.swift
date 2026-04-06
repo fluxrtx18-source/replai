@@ -7,7 +7,9 @@ struct UsageBadgeView: View {
             Image(systemName: "sparkles")
                 .foregroundStyle(AppDesign.Color.accent)
 
-            Text("Calm tone always free · Upgrade for all 6 + insights")
+            // Derived from PaywallGate / ReplyTone so copy stays correct if
+            // the free tone or total tone count ever changes.
+            Text("\(PaywallGate.freeTone.displayName) tone always free · Upgrade for all \(ReplyTone.allCases.count) + insights")
                 .font(AppDesign.Font.subhead)
                 .foregroundStyle(AppDesign.Color.textSecondary)
         }
