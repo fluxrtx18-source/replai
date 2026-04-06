@@ -88,6 +88,8 @@ final class SubscriptionManager {
             if activeSubscription == nil {
                 purchaseError = "No active subscription found for this Apple ID."
             }
+        } catch StoreKitError.userCancelled {
+            // User dismissed the Apple ID sign-in sheet — not a real error; stay silent.
         } catch {
             purchaseError = error.localizedDescription
         }

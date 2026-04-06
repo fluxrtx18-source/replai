@@ -78,6 +78,20 @@ struct PaywallView: View {
         VStack(spacing: AppDesign.Spacing.sm) {
             if subscriptionManager.isLoadingProducts {
                 ProgressView().tint(AppDesign.Color.accent)
+            } else if subscriptionManager.products.isEmpty {
+                // Products failed to load (network error, or StoreKit sandbox not configured).
+                VStack(spacing: AppDesign.Spacing.sm) {
+                    Text("Could not load plans")
+                        .font(AppDesign.Font.subhead)
+                        .foregroundStyle(AppDesign.Color.textSecondary)
+                    Button("Retry") {
+                        Task { await subscriptionManager.loadProducts() }
+                    }
+                    .font(AppDesign.Font.subhead)
+                    .foregroundStyle(AppDesign.Color.accent)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(AppDesign.Spacing.md)
             } else {
                 ForEach(subscriptionManager.products) { product in
                     PlanRowView(
