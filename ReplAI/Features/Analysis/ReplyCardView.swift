@@ -14,8 +14,15 @@ struct ReplyCardView: View {
             cardContent
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(tone.displayName) reply: \(replyText)")
-        .accessibilityHint(isCopied ? Text("Copied to clipboard") : Text("Double-tap to copy"))
+        // Locked cards must never announce the actual reply text.
+        // The label is kept generic so VoiceOver users know the tone exists
+        // and what action is available, without exposing paid content.
+        .accessibilityLabel(isLocked
+            ? "\(tone.displayName) reply — locked"
+            : "\(tone.displayName) reply: \(replyText)")
+        .accessibilityHint(isLocked
+            ? Text("Double-tap to upgrade")
+            : isCopied ? Text("Copied to clipboard") : Text("Double-tap to copy"))
         .sensoryFeedback(.success, trigger: isCopied)
     }
 
@@ -41,6 +48,10 @@ struct ReplyCardView: View {
                         // cost is paid once on first render and the bitmap is reused.
                         .drawingGroup()
                         .allowsHitTesting(false)
+                        // Hide from VoiceOver — the reply text is a paid feature.
+                        // The parent Button's accessibilityLabel is set conditionally
+                        // below so locked cards never announce the actual reply.
+                        .accessibilityHidden(true)
 
                     HStack(spacing: AppDesign.Spacing.xs) {
                         Image(systemName: "lock.fill")

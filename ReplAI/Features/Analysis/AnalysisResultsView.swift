@@ -57,6 +57,9 @@ struct AnalysisResultsView: View {
             AnalysisSummaryCard(summary: analysis.emotionalSummary)
                 .blur(radius: 8)
                 .allowsHitTesting(false)
+                // Hide from VoiceOver — the real summary is a paid feature.
+                // The overlay button below provides the accessible upgrade affordance.
+                .accessibilityHidden(true)
 
             Button(action: onUpgrade) {
                 VStack(spacing: AppDesign.Spacing.xs) {
@@ -77,6 +80,8 @@ struct AnalysisResultsView: View {
                 .background(.ultraThinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: AppDesign.Radius.md, style: .continuous))
             }
+            .accessibilityLabel("Emotional insight — upgrade to unlock")
+            .accessibilityHint("Double-tap to view upgrade options")
         }
         .clipShape(RoundedRectangle(cornerRadius: AppDesign.Radius.md, style: .continuous))
     }
