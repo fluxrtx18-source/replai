@@ -38,14 +38,28 @@ final class SubscriptionManager {
     func loadProducts() async {
         guard !isLoadingProducts else { return } // Prevent concurrent calls
         isLoadingProducts = true
+        purchaseError = nil
         defer { isLoadingProducts = false }
 
         do {
-            products = try await Product.products(for: Self.productIDs)
+            let fetched = try await Product.products(for: Self.productIDs)
                 .sorted { $0.price < $1.price }
-            await refreshEntitlements()
+
+            if fetched.isEmpty {
+                // StoreKit returned 0 products — either the scheme StoreKit
+                // Configuration is not injected (run via Xcode Run ▶ to activate it),
+                // or the products are not yet set up in App Store Connect sandbox.
+                #if DEBUG
+                purchaseError = "No products returned. Run from Xcode with StoreKit config enabled."
+                #else
+                purchaseError = "Plans unavailable. Please try again later."
+                #endif
+            } else {
+                products = fetched
+                await refreshEntitlements()
+            }
         } catch {
-            purchaseError = "Could not load subscription plans. Please check your connection."
+            purchaseError = "Could not load plans: \(error.localizedDescription)"
         }
     }
 
