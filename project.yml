@@ -1,0 +1,141 @@
+name: ReplAI
+options:
+  bundleIdPrefix: com.huseyinataseven
+  deploymentTarget:
+    iOS: "26.0"
+  xcodeVersion: "16.3"
+  createIntermediateGroups: true
+  generateEmptyDirectories: false
+  defaultConfig: Debug
+  groupSortPosition: top
+  transitivelyLinkDependencies: false
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    TARGETED_DEVICE_FAMILY: "1"
+    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: "RS8JSBN29A"
+
+schemes:
+  ReplAI:
+    build:
+      targets:
+        ReplAI: all
+        ReplAIShareExtension: all
+        ReplAIActionExtension: all
+        ReplAITests: [test]
+    run:
+      config: Debug
+      storeKitConfiguration: Configuration/StoreKit.storekit
+    test:
+      config: Debug
+      targets:
+        - ReplAITests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+
+targets:
+
+  # ── Main App ──────────────────────────────────────────────────────────────
+  ReplAI:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.huseyinataseven.replai
+        INFOPLIST_FILE: ReplAI/App/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Configuration/ReplAI.entitlements
+        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/Frameworks"]
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_EMIT_LOC_STRINGS: YES
+        GENERATE_INFOPLIST_FILE: NO
+    sources:
+      - path: ReplAI
+        excludes:
+          - "**/*.md"
+    resources:
+      - path: Configuration/StoreKit.storekit
+    dependencies:
+      - target: ReplAIShareExtension
+        embed: true
+      - target: ReplAIActionExtension
+        embed: true
+
+  # ── Unit Tests ────────────────────────────────────────────────────────────
+  ReplAITests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "26.0"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.huseyinataseven.replai.tests
+        GENERATE_INFOPLIST_FILE: YES
+    sources:
+      - path: ReplAITests
+    dependencies:
+      - target: ReplAI
+
+  # ── Share Extension ───────────────────────────────────────────────────────
+  ReplAIShareExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "26.0"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.huseyinataseven.replai.shareextension
+        INFOPLIST_FILE: ReplAIShareExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Configuration/ReplAIShareExtension.entitlements
+        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/../../Frameworks"]
+        SKIP_INSTALL: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+        GENERATE_INFOPLIST_FILE: NO
+    sources:
+      - path: ReplAIShareExtension
+      - path: ReplAI/Design/AppDesign.swift
+      - path: ReplAI/Models/ReplyTone.swift
+      - path: ReplAI/Localizable.xcstrings
+
+  # ── Action Extension ──────────────────────────────────────────────────────
+  ReplAIActionExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "26.0"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.huseyinataseven.replai.actionextension
+        INFOPLIST_FILE: ReplAIActionExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Configuration/ReplAIActionExtension.entitlements
+        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/../../Frameworks"]
+        SKIP_INSTALL: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+        GENERATE_INFOPLIST_FILE: NO
+    sources:
+      - path: ReplAIActionExtension
+      - path: ReplAI/Localizable.xcstrings
+      # Shared design + models
+      - path: ReplAI/Design/AppDesign.swift
+      - path: ReplAI/Models/ConversationAnalysis.swift
+      - path: ReplAI/Models/ReplyTone.swift
+      # Services (Vision ✓ confirmed; FoundationModels ⚠️ verify in extension)
+      - path: ReplAI/Services/VisionService.swift
+      - path: ReplAI/Services/AICoachService.swift
+      - path: ReplAI/Services/UsageTracker.swift
+      # View model (injectable — DI seam lets us swap services if needed)
+      - path: ReplAI/Features/Analysis/AnalysisViewModel.swift
+      # PaywallGate encodes D1/D2 rules used by AnalysisResultsView
+      - path: ReplAI/Features/Paywall/PaywallGate.swift
+      # Shared views reused verbatim inside the extension sheet
+      - path: ReplAI/Features/Analysis/AnalysisResultsView.swift
+      - path: ReplAI/Features/Analysis/AnalysisSummaryCard.swift
+      - path: ReplAI/Features/Analysis/ReplyCardView.swift
+      - path: ReplAI/Features/Analysis/LoadingView.swift
+      - path: ReplAI/Features/Analysis/AnalysisErrorView.swift

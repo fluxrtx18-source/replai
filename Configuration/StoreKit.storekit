@@ -1,0 +1,68 @@
+{
+  "identifier" : "REPLAI_STORE",
+  "nonConsumableProducts" : [],
+  "consumableProducts" : [],
+  "autoRenewableSubscriptions" : [
+    {
+      "adHocOffers" : [],
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "groupNumber" : 1,
+      "internalID" : "1000",
+      "introductoryOffer" : null,
+      "localizations" : [
+        {
+          "description" : "Unlimited relationship communication coaching, billed weekly.",
+          "displayName" : "Weekly",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.replai.weekly",
+      "recurringSubscriptionPeriod" : "P1W",
+      "referenceName" : "Weekly",
+      "subscriptionGroupID" : "ReplAI_Premium"
+    },
+    {
+      "adHocOffers" : [],
+      "displayPrice" : "18.99",
+      "familyShareable" : false,
+      "groupNumber" : 1,
+      "internalID" : "1001",
+      "introductoryOffer" : null,
+      "localizations" : [
+        {
+          "description" : "Unlimited relationship communication coaching, billed monthly.",
+          "displayName" : "Monthly",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.replai.monthly",
+      "recurringSubscriptionPeriod" : "P1M",
+      "referenceName" : "Monthly",
+      "subscriptionGroupID" : "ReplAI_Premium"
+    },
+    {
+      "adHocOffers" : [],
+      "displayPrice" : "87.99",
+      "familyShareable" : false,
+      "groupNumber" : 1,
+      "internalID" : "1002",
+      "introductoryOffer" : null,
+      "localizations" : [
+        {
+          "description" : "Unlimited relationship communication coaching, billed annually.",
+          "displayName" : "Yearly",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.replai.yearly",
+      "recurringSubscriptionPeriod" : "P1Y",
+      "referenceName" : "Yearly",
+      "subscriptionGroupID" : "ReplAI_Premium"
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

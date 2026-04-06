@@ -1,0 +1,11 @@
+ReplAI uses on-device AI (Apple Foundation Models) to analyze text conversation screenshots and generate reply suggestions.
+
+To test:
+1. Open the app and tap "Analyze a Screenshot"
+2. Select any screenshot of a text conversation from your photo library
+3. The app will extract text using Vision OCR and generate 6 tone-matched replies
+4. Tap any reply card to copy it
+
+Free tier allows 3 analyses per week. The subscription unlocks unlimited analyses.
+
+Note: This app requires iOS 26+ and a device that supports Apple Intelligence (iPhone 16 or later) for the on-device language model features. All processing happens locally — no network calls are made for analysis.

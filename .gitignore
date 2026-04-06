@@ -1,0 +1,43 @@
+# ── Xcode build artifacts ──────────────────────────────────────────────────────
+build/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# ── Xcode user-specific data (NOT shared) ──────────────────────────────────────
+# xcshareddata/xcschemes/ is intentionally NOT ignored — our ReplAI.xcscheme
+# carries the StoreKit config link; committing it keeps that working for everyone.
+xcuserdata/
+*.xcuserdatad
+
+# ── macOS filesystem noise ─────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# ── Swift Package Manager ──────────────────────────────────────────────────────
+.build/
+.swiftpm/
+
+# ── CocoaPods (not used, but just in case) ─────────────────────────────────────
+Pods/
+Podfile.lock
+
+# ── Fastlane credentials ───────────────────────────────────────────────────────
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output/
+
+# ── Simulator screenshots (local dev artefacts, not source) ───────────────────
+Simulator Screenshot*.png
+
+# ── Claude Code local settings (tool permissions, not source) ──────────────────
+.claude/settings.local.json
+.claude/cache/
+
+# ── ASC CLI run logs (generated, not source) ──────────────────────────────────
+.asc/runs/
