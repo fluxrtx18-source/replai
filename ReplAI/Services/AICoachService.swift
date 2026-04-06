@@ -24,9 +24,15 @@ actor AICoachService: ConversationAnalyzing {
     // context object is re-allocated, so the performance cost is minimal.
 
     func analyze(conversationText: String) async throws -> ConversationAnalysis {
-        let input = conversationText.count > Self.maxInputLength
+        let input = (conversationText.count > Self.maxInputLength
             ? String(conversationText.prefix(Self.maxInputLength))
-            : conversationText
+            : conversationText)
+            // Prevent prompt-structure injection: if a screenshot contains the
+            // literal string "</conversation>", it would close the XML delimiter
+            // early and allow any subsequent text to be read as a new instruction.
+            // The zero-width space between "<" and "/" is invisible to Vision OCR
+            // output and to the model, but breaks the closing tag syntactically.
+            .replacingOccurrences(of: "</conversation>", with: "< /conversation>")
 
         // XML-tagged delimiters are harder to escape than plain --- fences,
         // reducing the surface for prompt injection via crafted screenshot text.

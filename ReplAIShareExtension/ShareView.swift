@@ -105,10 +105,10 @@ struct ShareView: View {
               let url = URL(string: "replai://analyze") else { return }
         nonisolated(unsafe) let ctx = context
         ctx.open(url) { success in
-            // NSExtensionContext completion handlers are documented to run on the main
-            // thread. assumeIsolated asserts that guarantee at runtime (debug crash if
-            // Apple ever breaks it) and removes the need for unsafe cross-thread access.
-            MainActor.assumeIsolated {
+            // Task { @MainActor in } is safer than MainActor.assumeIsolated:
+            // assumeIsolated traps if Apple ever delivers this callback off the
+            // main thread; Task schedules a hop to MainActor unconditionally.
+            Task { @MainActor in
                 if !success {
                     // URL open failed — clean up the pending image so it doesn't
                     // reappear stale, and surface the failure so the user knows.

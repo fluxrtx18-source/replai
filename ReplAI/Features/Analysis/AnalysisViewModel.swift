@@ -57,7 +57,14 @@ final class AnalysisViewModel {
 
     func copyReply(for tone: ReplyTone) {
         guard let text = analysis?.reply(for: tone) else { return }
-        UIPasteboard.general.string = text
+        // 2-minute clipboard TTL: relationship messages shouldn't linger
+        // silently after the user switches to another app.
+        // "public.utf8-plain-text" is the canonical UTI for Swift String —
+        // equivalent to what UIPasteboard.general.string = text writes internally.
+        UIPasteboard.general.setItems(
+            [["public.utf8-plain-text": text]],
+            options: [.expirationDate: Date.now.addingTimeInterval(120)]
+        )
         copiedTone = tone
 
         copyFeedbackTask?.cancel()

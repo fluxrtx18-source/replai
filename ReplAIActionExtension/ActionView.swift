@@ -130,7 +130,10 @@ struct ActionView: View {
         guard let url = URL(string: "replai://paywall") else { return }
         nonisolated(unsafe) let ctx = context
         ctx?.open(url) { _ in
-            MainActor.assumeIsolated {
+            // Task { @MainActor in } is safer than MainActor.assumeIsolated:
+            // assumeIsolated traps if Apple ever delivers this callback off the
+            // main thread; Task schedules a hop to MainActor unconditionally.
+            Task { @MainActor in
                 ctx?.completeRequest(returningItems: nil)
             }
         }
