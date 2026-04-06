@@ -38,10 +38,16 @@ struct PaywallView: View {
                 if subscriptionManager.products.isEmpty {
                     await subscriptionManager.loadProducts()
                 }
-                if viewModel.selectedProduct == nil,
-                   let yearly = subscriptionManager.products.first(where: { $0.id == SubscriptionManager.yearlyID }) {
-                    viewModel.selectProduct(yearly)
-                }
+                selectYearlyIfNeeded()
+            }
+            // Guard against the race where ReplAIApp's launch-time loadProducts()
+            // is already in progress when the paywall appears.
+            // PaywallView.task calls loadProducts(), hits the guard (isLoadingProducts
+            // == true), returns immediately with an empty products array, and never
+            // sets viewModel.selectedProduct. When products finally arrive, this
+            // observer fires and performs the selection that the task missed.
+            .onChange(of: subscriptionManager.products.count) {
+                selectYearlyIfNeeded()
             }
             .onChange(of: subscriptionManager.isSubscribed) {
                 if subscriptionManager.isSubscribed { dismiss() }
@@ -53,6 +59,16 @@ struct PaywallView: View {
 
     private var canPurchase: Bool {
         viewModel.selectedProduct != nil && !viewModel.isPurchasing
+    }
+
+    /// Auto-selects the yearly plan when no plan is selected yet.
+    /// Called both from `.task` (normal path) and `.onChange(of: products.count)`
+    /// (race-condition path where products arrived after the task returned early).
+    private func selectYearlyIfNeeded() {
+        guard viewModel.selectedProduct == nil,
+              let yearly = subscriptionManager.products.first(where: { $0.id == SubscriptionManager.yearlyID })
+        else { return }
+        viewModel.selectProduct(yearly)
     }
 
     // MARK: - Plans
