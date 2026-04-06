@@ -5,8 +5,8 @@ struct PaywallFooterView: View {
     let isRestoring: Bool
     let onRestore: () -> Void
 
-    private static let privacyURL = URL(string: "https://huseyinataseven.github.io/replai/privacy")!
-    private static let termsURL   = URL(string: "https://huseyinataseven.github.io/replai/terms")!
+    private static let privacyURL = URL(string: "https://fluxrtx18-source.github.io/replai/privacy")!
+    private static let termsURL   = URL(string: "https://fluxrtx18-source.github.io/replai/terms")!
 
     var body: some View {
         VStack(spacing: AppDesign.Spacing.sm) {
